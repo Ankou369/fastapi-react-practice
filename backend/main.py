@@ -10,8 +10,11 @@ circles = [
 
 @app.get("/api/circles")
 def get_circles(keyword: str | None = None):
-    result = []
 
+    if keyword is None:
+        return circles
+    
+    result = []
     for circle in circles:
         if keyword in circle["name"]:
             result.append(circle)
