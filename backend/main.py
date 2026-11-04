@@ -18,4 +18,4 @@ def get_circle(circle_id: int):
         if circle["id"] == circle_id:
             return circle
 
-    raise HTTPException(status_code=404, datail="サークルが見つかりません")
+    raise HTTPException(status_code=404, detail="サークルが見つかりません")
