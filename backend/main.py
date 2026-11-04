@@ -9,8 +9,13 @@ circles = [
 ]
 
 @app.get("/api/circles")
-def get_circles():
-    return circles
+def get_circles(keyword: str | None = None):
+    result = []
+
+    for circle in circles:
+        if keyword in circle["name"]:
+            result.append(circle)
+    return result
 
 @app.get("/api/circles/{circle_id}")
 def get_circle(circle_id: int):
@@ -19,3 +24,4 @@ def get_circle(circle_id: int):
             return circle
 
     raise HTTPException(status_code=404, detail="サークルが見つかりません")
+
