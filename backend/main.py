@@ -17,15 +17,28 @@ circles = [
 
 @app.get("/api/circles")
 def get_circles(keyword: str | None = None):
-
+    conn = get_db()
     if keyword is None:
-        return circles
-    
+        rows = conn.execute("SELECT * FROM circles").fetchall()
+    else:
+        rows = conn.execute("SELECT * FROM circles WHERE name LIKE ?", ("%" + keyword + "%",)).fetchall()
+    conn.close()
     result = []
-    for circle in circles:
-        if keyword in circle["name"]:
-            result.append(circle)
+    for row in rows:
+        result.append(dict(row))
     return result
+    
+# @app.get("/api/circles")
+# def get_circles(keyword: str | None = None):
+
+#     if keyword is None:
+#         return circles
+    
+#     result = []
+#     for circle in circles:
+#         if keyword in circle["name"]:
+#             result.append(circle)
+#     return result
 
 @app.post("/api/circles", status_code=201)
 def create_circle(circle: CircleCreate):
@@ -85,5 +98,10 @@ def init_db():
                                                      
     conn.commit()
     conn.close()
+
+def get_db():
+    conn = sqlite3.connect("circles.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 init_db()
