@@ -79,9 +79,9 @@ def init_db():
 
     count = conn.execute("SELECT COUNT(*) FROM circles").fetchone()[0]
     if count == 0:
-        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
-        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
-        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("ロンロック", "音楽"))
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("クラッシックギター部", "音楽"))
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("サッカー部", "スポーツ"))
                                                      
     conn.commit()
     conn.close()
