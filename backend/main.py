@@ -77,6 +77,12 @@ def init_db():
             )
         """)
 
+    count = conn.execute("SELECT COUNT(*) FROM circles").fetchone()[0]
+    if count == 0:
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
+        conn.execute("INSERT INTO circles (name, category) VALUES (?, ?)", ("str", "str"))
+                                                     
     conn.commit()
     conn.close()
 
