@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
+import sqlite3
 
 class CircleCreate(BaseModel):
     name: str
@@ -64,3 +65,5 @@ def update_circle(circle_id: int, circle: CircleCreate):
             return c
 
     raise HTTPException(status_code=404, detail="サークルが見つかりません")
+
+conn = sqlite3.connect("circles.db")
