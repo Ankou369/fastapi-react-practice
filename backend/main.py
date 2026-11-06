@@ -66,4 +66,18 @@ def update_circle(circle_id: int, circle: CircleCreate):
 
     raise HTTPException(status_code=404, detail="サークルが見つかりません")
 
-conn = sqlite3.connect("circles.db")
+def init_db():
+    conn = sqlite3.connect("circles.db")
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS circles(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            category TEXT NOT NULL,
+            description TEXT
+            )
+        """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
