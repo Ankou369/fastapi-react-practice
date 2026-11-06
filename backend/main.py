@@ -37,8 +37,6 @@ def create_circle(circle: CircleCreate):
     circles.append(new_circle)
     return new_circle
 
-    
-
 @app.get("/api/circles/{circle_id}")
 def get_circle(circle_id: int):
     for circle in circles:
@@ -47,3 +45,22 @@ def get_circle(circle_id: int):
 
     raise HTTPException(status_code=404, detail="サークルが見つかりません")
 
+@app.delete("/api/circles/{circle_id}")
+def delete_circle(circle_id: int):
+    for circle in circles:
+        if circle["id"] == circle_id:
+            circles.remove(circle)
+            return {"message": "削除しました"}
+
+    raise HTTPException(status_code=404, detail="サークルが見つかりません")
+
+@app.put("/api/circles/{circle_id}")
+def update_circle(circle_id: int, circle: CircleCreate):
+    for c in circles:
+        if c["id"] == circle_id:
+            c["name"] = circle.name
+            c["category"] = circle.category
+            c["description"] = circle.description
+            return c
+
+    raise HTTPException(status_code=404, detail="サークルが見つかりません")
