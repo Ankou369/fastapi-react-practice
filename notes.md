@@ -89,3 +89,5 @@ python -m pip install -r requirements.txt
 | `uvicorn main:app --reload` | `npm run dev` |
 
 どちらも `.venv/` と `node_modules/` はGitHubに上げない。
+
+データベース接続やテーブル作成、スキーマ（受け取るデータの形）を main.py から別ファイルへ移したことで、main.py にはエンドポイントだけが残り、読みやすくなった。
