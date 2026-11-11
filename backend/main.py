@@ -1,19 +1,8 @@
-from pydantic import BaseModel
+from schemas import CircleCreate
 from fastapi import FastAPI, HTTPException
 import sqlite3
-
-class CircleCreate(BaseModel):
-    name: str
-    category: str
-    description: str | None = None
     
 app = FastAPI()
-
-circles = [
-    {"id": 1, "name": "ロンロック","category": "音楽"},
-    {"id": 2, "name": "クラッシックギター部","category": "音楽"},
-    {"id": 3, "name": "サッカー部","category": "スポーツ"}
-]
 
 @app.get("/api/circles")
 def get_circles(keyword: str | None = None):
