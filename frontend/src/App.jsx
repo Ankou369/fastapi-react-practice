@@ -1,3 +1,9 @@
+const circles = [
+  { id: 1, name: "ロンロック", category: "音楽"},
+  { id: 2, name: "クラッシックギター部", category: "音楽"},
+  { id: 3, name: "バスケ部", category: "スポーツ"},
+]
+
 function CircleCard(props) {
   return (
     <div>
@@ -10,8 +16,13 @@ function CircleCard(props) {
 function App() {
   return (
     <div>
-      <CircleCard name="ロンロック" category="音楽" />
-      <CircleCard name="クラッシックギター部" category="音楽" />
+      {circles.map((circle) => (
+        <CircleCard
+        key={circle.id}
+        name={circle.name}
+        category={circle.category}
+        />
+    ))}
     </div>
   )
 }
