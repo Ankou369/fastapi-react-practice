@@ -27,18 +27,6 @@ def get_circles(keyword: str | None = None):
     for row in rows:
         result.append(dict(row))
     return result
-    
-# @app.get("/api/circles")
-# def get_circles(keyword: str | None = None):
-
-#     if keyword is None:
-#         return circles
-    
-#     result = []
-#     for circle in circles:
-#         if keyword in circle["name"]:
-#             result.append(circle)
-#     return result
 
 @app.post("/api/circles", status_code=201)
 def create_circle(circle: CircleCreate):
@@ -50,18 +38,6 @@ def create_circle(circle: CircleCreate):
     conn.close()
     return dict(row)
 
-
-# @app.post("/api/circles", status_code=201)
-# def create_circle(circle: CircleCreate):
-#     new_circle = {"id":len(circles) + 1, 
-#                   "name":circle.name, 
-#                   "category":circle.category,
-#                   "description":circle.description,
-#                   }
-
-#     circles.append(new_circle)
-#     return new_circle
-
 @app.get("/api/circles/{circle_id}")
 def get_circle(circle_id: int):
     conn = get_db()
@@ -71,33 +47,32 @@ def get_circle(circle_id: int):
         raise HTTPException(status_code=404, detail="サークルが見つかりません")
     return dict(row)
 
-# @app.get("/api/circles/{circle_id}")
-# def get_circle(circle_id: int):
-#     for circle in circles:
-#         if circle["id"] == circle_id:
-#             return circle
-
-#     raise HTTPException(status_code=404, detail="サークルが見つかりません")
-
 @app.delete("/api/circles/{circle_id}")
 def delete_circle(circle_id: int):
-    for circle in circles:
-        if circle["id"] == circle_id:
-            circles.remove(circle)
-            return {"message": "削除しました"}
-
-    raise HTTPException(status_code=404, detail="サークルが見つかりません")
+    conn = get_db()
+    row = conn.execute("SELECT * FROM circles WHERE id = ?", (circle_id,)).fetchone()
+    if row is None:
+        conn.close()
+        raise HTTPException(status_code=404, detail="サークルが見つかりません")
+    conn.execute("DELETE FROM circles WHERE id = ?", (circle_id,))
+    conn.commit()
+    conn.close()
+    return {"message": "削除"}
 
 @app.put("/api/circles/{circle_id}")
 def update_circle(circle_id: int, circle: CircleCreate):
-    for c in circles:
-        if c["id"] == circle_id:
-            c["name"] = circle.name
-            c["category"] = circle.category
-            c["description"] = circle.description
-            return c
-
-    raise HTTPException(status_code=404, detail="サークルが見つかりません")
+    conn = get_db()
+    row = conn.execute("SELECT * FROM circles WHERE id = ?",(circle_id,)).fetchone()
+    if row is None:
+        conn.close()
+        raise HTTPException(status_code=404, detail="サークルが見つかりません")
+    conn.execute("UPDATE circles SET name = ?, category = ?, description = ? WHERE id = ?",
+                (circle.name, circle.category, circle.description, circle_id)
+    )
+    conn.commit()
+    row = conn.execute("SELECT * FROM circles WHERE id = ?",(circle_id,)).fetchone()
+    conn.close()
+    return dict(row)
 
 def init_db():
     conn = sqlite3.connect("circles.db")
