@@ -20,6 +20,11 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
+  const [newName, setNewName] = useState("")
+  const [newCategory, setNewCategory] = useState("")
+  const [newDescription, setNewDescription] = useState("")
+
+
   const filtered = circles.filter((circle) => circle.name.includes(keyword))
   
   useEffect(() => {
@@ -38,6 +43,21 @@ function App() {
 
   if (loading) return <p>読み込み中...</p>
   if (error) return <p>{error}</p>
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    const res = await fetch("http://127.0.0.1:8000/api/circles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newName, category: newCategory, description: newDescription }),
+    })
+    const created = await res.json()
+    setCircles([...circles, created])
+    setNewName("")
+    setNewCategory("")
+    setNewDescription("")
+  }
+
   
   return (
     <div>
@@ -47,6 +67,13 @@ function App() {
       onChange={(e) => setKeyword(e.target.value)}
       placeholder="サークル名で検索"
       />
+
+      <form onSubmit={handleSubmit}>
+        <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="名前" />
+        <input value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="カテゴリ" />
+        <input value={newDescription} onChange={(e) => setNewDescription(e.target.value)} placeholder="説明" />
+        <button type="submit">登録</button>
+      </form>
 
       {filtered.map((circle) => (
         <CircleCard
