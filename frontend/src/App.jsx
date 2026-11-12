@@ -9,11 +9,14 @@ function CircleCard(props) {
       <p>{props.category}</p>
       <button onClick={() => setLikes(likes + 1)}>いいね </button>
       <p>いいね数: {likes}</p>
+      <button onClick={props.onSelect}>詳細</button>
     </div>
   )
 }
 
 function App() {
+  const [selected, setSelected] = useState(null)
+
   const [circles, setCircles] = useState([])
   const [keyword, setKeyword] = useState("")
 
@@ -43,6 +46,14 @@ function App() {
 
   if (loading) return <p>読み込み中...</p>
   if (error) return <p>{error}</p>
+  if (selected) return (
+    <div>
+      <h2>{selected.name}</h2>
+      <p>{selected.category}</p>
+      <p>{selected.description}</p>
+      <button onClick={() => setSelected(null)}>戻る</button>
+    </div>
+  )
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -80,6 +91,7 @@ function App() {
         key={circle.id}
         name={circle.name}
         category={circle.category}
+        onSelect={() => setSelected(circle)}
         />
     ))}
     </div>
